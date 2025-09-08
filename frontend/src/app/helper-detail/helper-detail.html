@@ -1,0 +1,23 @@
+<mat-card *ngIf="helper">
+    <mat-card-title>{{ helper.name }}</mat-card-title>
+    <mat-card-subtitle>{{ helper.workName }}</mat-card-subtitle>
+    <mat-divider></mat-divider>
+  
+    <h3>EMPLOYEE ID</h3>
+    <p>ID: {{ helper.employeeId }}</p>
+    <p>Code: {{ helper.employeeCode }}</p>
+    <p>ID Card: {{ helper.identificationCard }}</p>
+  
+    <h3>PERSONAL DETAILS</h3>
+    <p>Gender: {{ helper.gender }}</p>
+    <p>Languages: {{ helper.languages.join(', ') }}</p>
+    <p>Mobile: {{ helper.mobile }}</p>
+    <p>Email: {{ helper.email }}</p>
+    <p>KYC: {{ helper.kycDocument }}</p>
+  
+    <h3>SERVICE DETAILS</h3>
+    <p>Type: {{ helper.serviceType }}</p>
+    <p>Organization: {{ helper.organization }}</p>
+    <p>Joined On: {{ helper.joinedOn | date }}</p>
+  </mat-card>
+  

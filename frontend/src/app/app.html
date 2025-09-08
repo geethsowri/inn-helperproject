@@ -1,0 +1,9 @@
+<mat-sidenav-container style="height: 100vh;">
+  <mat-sidenav mode="side" opened style="width: 300px;">
+    <app-helper-list (selectHelper)="selectedHelper = $event"></app-helper-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content style="padding: 20px;">
+    <app-helper-detail [helper]="selectedHelper"></app-helper-detail>
+  </mat-sidenav-content>
+</mat-sidenav-container>
