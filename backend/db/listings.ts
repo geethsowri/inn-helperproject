@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const modelSchema = require('./model');
+import mongoose from 'mongoose'
+import modelSchema from './model';
 
 const listingSchema = new mongoose.Schema({
     emp_id: { type: String, required: true },
@@ -7,4 +7,4 @@ const listingSchema = new mongoose.Schema({
 })
 
 const Listing = mongoose.model("Listening", listingSchema);
-module.exports = Listing;
+export default Listing;
