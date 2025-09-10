@@ -1,0 +1,80 @@
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: -20px;
+
+    &:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+  }
+
+  .phone-input-group {
+    display: flex;
+    align-items: center; 
+    gap: 10px;
+
+    .phone {
+        flex: 0 0 100px;
+        width: 5px;
+    }
+
+    input[type="tel"] {
+        flex: 1;
+        height: 50px;
+    }
+    }
+
+
+  .error-message {
+    color: red;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 4px;
+  }
+
+  app-select-dropdown,
+  app-checkbox,
+  app-radio-button {
+    display: block;
+  }
+
+  button[type="submit"] {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #357ab8;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+<main class="form-1">
+  <div class="form-header">
+    <p>Helper Details</p>
+    <span>Track, Add & Manage all your helpers at one place</span>
+  </div>
+
+  <div class="helper-form" [formGroup]="form">
+    <div class="profile-img" (click)="fileUpload()">
+      <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput (change)="onFileChange($event)">
+      <img src="assets/images/cloud_download.png" alt="upload">
+      <div>
+        <p>Upload photo</p>
+      </div>
+    </div>
+    <span>Upload photo (.png, .jpeg) size 5 mb</span>
+
+    <app-select-dropdown
+      heading="Type of Service"
+      label="Select Type of Service"
+      [options]="['Maid', 'Cook', 'Nurse', 'Driver', 'Laundry', 'Newspaper', 'Plumber']"
+      formControlName="serviceType" >
+    </app-select-dropdown>
+    <div class="error-message" *ngIf="form.get('serviceType')?.touched && form.get('serviceType')?.hasError('required')">
+      Service type is required
+    </div>
+
+
+    <app-select-dropdown
+      heading="Organization Name"
+      label="Organization Name"
+      [options]="['ASBL', 'Springs Helpers']"
+      formControlName="organization">
+    </app-select-dropdown>
+    <div class="error-message" *ngIf="form.get('organization')?.touched && form.get('organization')?.hasError('required')">
+      Organization name is required
+    </div>
+
+
+    <label for="name">Full Name*</label>
+    <input type="text" id="name" placeholder="Full Name" formControlName="fullName" required>
+    <div class="error-message" *ngIf="form.get('fullName')?.touched && form.get('fullName')?.hasError('required')" id="name">
+      Full name is required
+    </div>
+
+    <app-checkbox name="language" formControlName="languages"></app-checkbox>
+    <div class="error-message" *ngIf="form.get('languages')?.touched && form.get('languages')?.hasError('required')">
+      Select atleast 1
+    </div>
+
+    <app-radio-button name="gender" formControlName="gender"></app-radio-button>
+    <div class="error-message" *ngIf="form.get('gender')?.touched && form.get('gender')?.hasError('required')">
+      Gender is required
+    </div>
+
+    <div class="phone-input-group">
+      <app-select-dropdown
+        class="phone"
+        heading="Phone"
+        [options]="['+91', '+1', '+44', '+61', '+81', '+49', '+33']"
+        formControlName="phonePrefix">
+      </app-select-dropdown>
+
+      <input type="tel" id="phone" placeholder="Enter phone number" formControlName="phone" required>
+    </div>
+    <div class="error-message" *ngIf="form.get('phone')?.touched && form.get('phone')?.hasError('required')">
+      Phone number is required
+    </div>
+
+    <div class="error-message" *ngIf="form.get('phone')?.touched && form.get('phone')?.hasError('pattern')">
+      Phone must contain exactly 10 digits
+    </div>
+
+    <label for="email">Email*</label>
+    <input type="email" id="email" formControlName="email">
+    <div class="error-message" *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')">
+      Email is required
+    </div>
+
+    <app-select-dropdown
+      heading="Choose Vehicle Type"
+      [options]="['None','Car','Bike','Auto','Cycle']"
+      formControlName="vehicleType" *ngIf="vehicle">
+    </app-select-dropdown>
+
+    <div class="document">
+      <p>KYC Document*</p>
+      <div class="profile-img doc" (click)="fileUpload()">
+        <input type="file" accept="image/*, application/pdf" hidden #fileInput>
+        <div>
+          <img src="assets/images/plus.png" alt="Upload">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="line"></div>
+
+  <button (click)="onPageChange()">
+    <p>Next</p>
+    <img src="assets/images/arrow-up.png" alt="next">
+  </button>
+</main>

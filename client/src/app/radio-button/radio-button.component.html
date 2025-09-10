@@ -1,0 +1,8 @@
+<div class="gender-group">
+  <p class="gender-label">Gender*</p>
+  <mat-radio-group [value]="value" (change)="onSelectionChange($event.value)" [disabled]="disabled" name="gender" required aria-label="Select gender">
+    <mat-radio-button *ngFor="let gen of genders" [value]="gen.value" [id]="gen.id" class="custom-radio">
+      {{ gen.display }}
+    </mat-radio-button>
+  </mat-radio-group>
+</div>

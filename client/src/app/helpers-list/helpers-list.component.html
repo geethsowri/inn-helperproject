@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="helpers-list">
+    <div *ngFor="let helper of filteredHelpers() || all_helpers" class="helper-card" [ngClass]="{ 'selected': helper === selectedHelper }" (click)="selectHelper(helper)">
+      <div class="profilephoto">
+        {{ getFieldValue(helper.fields, 'fullName') | slice:0:2 }}
+      </div>
+      <div class="detail">
+        <p>{{ getFieldValue(helper.fields, 'fullName') }}</p>
+        <span>{{ getFieldValue(helper.fields, 'serviceType') }}</span>
+      </div>
+      <span>0 Households</span>
+    </div>
+  </div>
+
+  <ng-template #noHelperSelected>
+    <div class="nohelpers">
+      <p>No helper with the selected filters.</p>
+    </div>
+  </ng-template>
+  <div class="profile-card" *ngIf="selectedHelper; else noHelperSelected">
+    <div class="profile-header">
+      <div class="left-section">
+        <div class="initials">
+          {{ getFieldValue(selectedHelper.fields, 'fullName') | slice:0:2 }}
+        </div>
+        <div class="name-role">
+          <div class="name">{{ getFieldValue(selectedHelper.fields, 'fullName') }}</div>
+          <div class="role">{{ getFieldValue(selectedHelper.fields, 'serviceType') }}</div>
+        </div>
+      </div>
+
+      <div class="options">
+        <button (click)="editHelper(selectedHelper)"><img src="assets/images/edit.png" alt="edit"></button>
+        <button mat-raised-button color="warn" (click)="deleteHelper(selectedHelper)"><img src="assets/images/delete.png" alt="delete"></button>
+      </div>
+    </div>
+
+
+  <div class="section">
+    <h4>Employee ID</h4>
+    <div class="item">
+      <span>Identification Card</span>
+      <a href="" target="_blank">View</a>
+    </div>
+    <div class="item">
+      <span>Employee Code</span>
+      <span>{{ selectedHelper.emp_id}}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h4>Personal Details</h4>
+    <div class="item">
+      <span>Gender</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'gender') }}</span>
+    </div>
+    <div class="item">
+      <span>Language(s)</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'languages')}}</span>
+    </div>
+    <div class="item">
+      <span>Mobile No.</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'phone') }}</span>
+    </div>
+    <div class="item">
+      <span>Email ID</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'email')}}</span>
+    </div>
+    <div class="item">
+      <span>KYC Document</span>
+      <a href="" target="_blank">View</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h4>Service Details</h4>
+    <div class="item">
+      <span>Type</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'serviceType') }}</span>
+    </div>
+    <div class="item">
+      <span>Organization</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'organization') }}</span>
+    </div>
+    <div class="item">
+      <span>Joined On</span>
+      <span>{{ getFieldValue(selectedHelper.fields, 'joiningDate') }}</span>
+    </div>
+  </div>
+  
+</div>
+
+</div>

@@ -1,0 +1,51 @@
+<div class="delete" *ngIf="data.deletion == 0">
+    <img src='assets/images/warning.png' alt='delete' width=30px style="margin-left:25px; margin-top:22px">
+    <ng-container *ngIf="length === 9; else elseBlock">
+      <mat-dialog-content style="margin-bottom: -20px; font-size: 18px; width: 100%;">
+        Delete <strong style="color:red">{{ data[2].value }}({{ data[0].value }})</strong>?
+      </mat-dialog-content>
+    </ng-container>
+
+    <ng-template #elseBlock>
+      <mat-dialog-content style="margin-bottom: -20px; font-size: 18px;">
+        Delete <strong style="color:red">{{ data[3].value }}({{ data[1].value }})</strong>?
+      </mat-dialog-content>
+    </ng-template>
+
+    <span style="font-size:11px; color:gray; margin-left:25px">You can't undo this action</span>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close="false">Cancel</button>
+        <button mat-button color="warn" [mat-dialog-close]="true">Delete</button>
+    </mat-dialog-actions>
+</div>
+
+<div class="posted" *ngIf="data.deletion == 1">
+  <mat-dialog-actions align="end">
+    <button mat-button color="primary" (click)="dialogRef.close()" style="background-color:white">
+      <img src="assets/images/wrong.png" alt="close" width="16px" height="18px">
+    </button>
+  </mat-dialog-actions>
+
+  <mat-dialog-content style="font-size: 18px; padding: 16px; display: flex; flex-direction: column; margin: auto; align-items: center; justify-content: center; gap:10px; margin-top: 40px;">
+    <img src="assets/images/check.png" alt="success" width="60px" height="60px" style="box-shadow:0px 20px 20px rgb(101, 11, 226,0.2); border-radius:50%">
+    <strong style="color: rgb(188, 51, 238);">
+      {{ data.fields[3].value }}
+    </strong> added successfully!
+  </mat-dialog-content>
+</div>
+
+<div class="posted" *ngIf="data.deletion == 2">
+  <mat-dialog-actions align="end">
+    <button mat-button color="primary" (click)="dialogRef.close()" style="background-color:white">
+      <img src="assets/images/wrong.png" alt="close" width="16px" height="18px">
+    </button>
+  </mat-dialog-actions>
+
+  <mat-dialog-content style="font-size: 18px; padding: 16px; display: flex; flex-direction: column; margin: auto; align-items: center; justify-content: center; gap:10px; margin-top: 40px;">
+    <img src="assets/images/check.png" alt="success" width="60px" height="60px" style="box-shadow:0px 20px 20px rgb(101, 11, 226,0.2); border-radius:50%">
+    <strong style="color: rgb(188, 51, 238);">
+      New helpers 
+    </strong> are added and existing are updated.
+  </mat-dialog-content>
+</div>
+

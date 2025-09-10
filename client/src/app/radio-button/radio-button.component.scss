@@ -1,0 +1,29 @@
+.gender-group {
+  margin: 30px 0;
+  margin-bottom: 35px;
+
+  .gender-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  mat-radio-group {
+    flex-wrap: wrap;
+
+    mat-radio-button{
+      margin-right: 25px;
+
+      p{
+        margin-bottom: 1px;
+        margin-left: -8px;
+      }
+    }
+  }
+
+  ::ng-deep .custom-radio .mdc-radio {
+    transform: scale(0.8);
+  }
+}
+

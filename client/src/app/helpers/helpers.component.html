@@ -1,0 +1,84 @@
+<div class="helpers-page">
+    <div class="main-section">
+
+        <div class="heading">
+            <p>Helpers</p>
+            <img src="/assets/images/more.png" alt="more">
+        </div>
+
+        <div class="line"></div>
+
+        <div class="buttons">
+            <div class="first-btns">
+                <div class="sorting">
+                    <button id="sort" (click)="showdropdown = !showdropdown">
+                        <img src="/assets/images/sorting.png" alt="sorting">
+                    </button>
+                    <div class="sort-options" *ngIf="showdropdown">
+                        <p (click)="sortBy('fullName')" [ngClass]="{ sortselected: selectedSortField === 1 }">
+                            Sort by Helpers Name(A-Z)
+                            <img src="assets/images/select.png" alt="..." *ngIf="selectedSortField === 1">
+                        </p>
+                        <p (click)="sortBy('emp_id')" [ngClass]="{ sortselected: selectedSortField === 2 }">
+                            Employee ID
+                            <img src="assets/images/select.png" alt="..." *ngIf="selectedSortField === 2">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="filtering">
+                    <button id="filter" (click)="showdropdown_filter = !showdropdown_filter">
+                        <img src="/assets/images/filter.png" alt="filter">
+                    </button>
+
+                    <div class="filter-options" *ngIf="showdropdown_filter">
+                        <label for="service">Type of Service</label>
+                        <select id="service" [(ngModel)]="selectedService">
+                        <option value="" disabled selected>Select Type of Service</option>
+                        <option *ngFor="let option of serviceOptions" [value]="option">{{ option }}</option>
+                        </select>
+
+                        <label for="organization">Organization Name</label>
+                        <select id="organization" [(ngModel)]="selectedOrganization">
+                        <option value="" disabled selected>Select Organization</option>
+                        <option *ngFor="let org of organizationOptions" [value]="org">{{ org }}</option>
+                        </select>
+
+                        <div class="filter-btns">
+                            <button (click)="resetFilters()">reset</button>
+                            <button (click)="applyFilters()">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                <button id="date">
+                    <img src="/assets/images/calendar.png" alt="calendar">
+                </button>
+                <div class="search-bar">
+                    <img src="/assets/images/search.png" alt="search icon">
+                    <input type="search" name="search" id="search-employee" placeholder="Name, Employee ID, Phone" [value]="searchSignal()" (input)="searchSignal.set($any($event.target).value)">
+                </div>
+                <span>{{helpers_number()}} helpers</span>
+            </div>
+
+            <div class="last-btns">
+                <button id="download" title="download" (click)="DownloadasExcel()">
+                    <img src="assets/images/download.png" alt="download">
+                </button>
+                <div class="excelbtn" (click)="activateInput()" [attr.title]="tooltipText">
+                    <img src="assets/images/download.png" alt="upload">
+                    <input type="file" id="excelfile" accept=".xls,.xlsx" (change)="openExcel($event)" #excelFileClick hidden>
+                </div>
+                <button id="add-helper" (click)="addNewHelper()">
+                    <img src="assets/images/plus.png" alt="add">
+                    <span>Add Helper</span>
+                </button>
+            </div>
+        </div>
+
+        <section class="helpers-list">
+            <app-helpers-list [search]="searchSignal" [helpers]="filtered_helpers"></app-helpers-list>
+        </section>
+
+    </div>
+
+</div>

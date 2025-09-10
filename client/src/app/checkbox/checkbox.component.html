@@ -1,0 +1,14 @@
+<p>Languages*</p>
+<section class="example-section">
+  <mat-checkbox class="example-margin" [checked]="allSelected" [indeterminate]="partiallySelected" (change)="toggleSelectAll($event.checked)">
+    Select All
+  </mat-checkbox>
+
+  <ul class="example-list-section">
+    <li *ngFor="let lang of alllanguages">
+      <mat-checkbox [checked]="selectedlanguages().has(lang.name)" (change)="toggleLanguage(lang.name, $event.checked)">
+        {{ lang.name }}
+      </mat-checkbox>
+    </li>
+  </ul>
+</section>

@@ -1,0 +1,30 @@
+<main class="form-2">
+
+    <div class="upload-section">
+        <p>Additional Documents</p>
+        <span>Upload related documents. This step is optional.</span>
+        <div class="document">
+            <div class="profile-img doc" (click)="fileUpload()">
+                <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput>
+                <div>
+                    <img src="assets/images/plus.png" alt="Upload">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="line"></div>
+
+    <div class="buttons">
+        <button (click)="onPageChange(-1)" id="previous">
+            <p>Previous</p>
+            <img src="assets/images/arrow-up.png" alt="next">
+        </button>
+    
+        <button (click)="onPageChange(1)" id="next">
+            <p>Next</p>
+            <img src="assets/images/arrow-up.png" alt="next">
+        </button>
+    </div>
+</main>

@@ -1,0 +1,124 @@
+$primary-color: #673ab7;
+$label-color: #6e6e6e;
+
+.form-2 {
+    width: 58vw;
+    margin: 2rem 0.5rem;
+
+    .line {
+        height: 1.45px;
+        width: 100%;
+        background-color: rgb(224, 224, 224);
+        margin-top: 20px;
+    }
+
+    .upload-section {
+        margin: 28px;
+        margin-top: 65px;
+        margin-bottom: 32px;
+
+        p {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 18px;
+        }
+
+        span {
+            font-size: 0.8rem;
+            color: $label-color;
+            margin-bottom: 2.5rem;
+            margin-top: 0.5rem;
+        }
+
+        // Removed nested `form` selector — moved styles directly inside `.upload-section`
+        .profile-img {
+            width: 125px;
+            height: 125px;
+            border: 2px dashed $primary-color;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-direction: column;
+            background-color: rgba($primary-color, 0.1);
+
+            div {
+                text-align: center;
+                color: $primary-color;
+                font-weight: 600;
+                font-size: 12.8px;
+            }
+
+            img {
+                width: 29px;
+                height: 29px;
+            }
+
+            &:hover {
+                background-color: rgba($primary-color, 0.05);
+            }
+
+            &.doc {
+                width: 150px;
+                height: 120px;
+                border-radius: 0.3rem;
+                margin-top: 0.5rem;
+            }
+        }
+
+        .document {
+            img {
+                filter: invert(27%) sepia(98%) saturate(7485%) hue-rotate(253deg) brightness(91%) contrast(107%);
+            }
+        }
+    }
+
+    .buttons {
+        display: flex;
+        margin-left: 70%;
+
+        button {
+            background-color: black;
+            color: white;
+            width: 4.8rem;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            margin: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+
+            p {
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 0px;
+            }
+
+            img {
+                width: 15px;
+                height: 15px;
+                transform: rotate(90deg);
+                filter: brightness(0) saturate(100%) invert(100%);
+            }
+        }
+
+        #previous {
+            flex-direction: row-reverse;
+            width: 6.3rem;
+            background-color: white;
+            color: black;
+            height: 37px;
+
+            img {
+                transform: rotate(-90deg);
+                filter: invert(1);
+            }
+        }
+    }
+}

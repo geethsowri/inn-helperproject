@@ -1,0 +1,35 @@
+<!-- <nav class="sidebar">
+    <div class="heading">
+        <div class="logo">
+            <img src="favicon.ico" alt="logo">
+        </div>
+        <div class="title">
+            <p>Manage</p>
+            <small>by ASBL Homes</small>
+        </div>
+    </div>
+
+    <div class="search-bar">
+        <img src="/assets/images/search.png" alt="search icon">
+        <input type="search" name="search" id="search" placeholder="Search">
+    </div>
+
+    <div class="sidebar-links">
+        <div class="items" *ngFor="let sidebaritem of sidebarItems; let prim_index = index">
+            <div class="dropdown" (click)="sidebaritem.isOpen = !sidebaritem.isOpen">
+                <img src="/assets/images/down-chevron.png" alt="arrow" *ngIf="!sidebaritem.isOpen">
+                <img src="/assets/images/arrow-up.png" alt="arrow" *ngIf="sidebaritem.isOpen">
+                <p>{{ sidebaritem.main_name + ' MANAGEMENT'}}</p>
+            </div>
+            <ul *ngIf="sidebaritem.isOpen">
+                <li *ngFor="let item of sidebaritem.items; let second_index = index"
+                    (click)="selectItem(prim_index, second_index, item.name)"
+                    [class.selected]="selected?.groupIdx === prim_index && selected?.itemIdx === second_index"
+                    style="cursor: pointer;">
+                    <img *ngIf="item.image" [src]="item.image" alt="icon">
+                    {{ item.name }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> -->
