@@ -29,9 +29,9 @@
     }
 
     .line {
-      height: 1px;
+      height: 10px;
       width: 100%;
-      background-color: rgb(224, 224, 224);
+      background-color: rgb(255, 0, 0);
     }
 
     .buttons {
@@ -61,7 +61,7 @@
           }
         }
 
-        span{
+        span {
           width: 120px;
           color: rgb(117, 117, 117);
         }
@@ -119,13 +119,13 @@
               }
             }
 
-            .sortselected{
+            .sortselected {
               background-color: rgba(38, 0, 255, 0.1);
               display: flex;
               align-items: center;
               justify-content: space-between;
 
-              img{
+              img {
                 width: 15px;
                 height: 15px;
               }
@@ -179,7 +179,7 @@
               color: #333;
             }
 
-            #service{
+            #service {
               margin-bottom: 20px;
             }
 
@@ -305,30 +305,31 @@
         align-items: center;
         gap: 10px;
 
-        .excelbtn{
+        .excelbtn {
           display: flex;
           justify-content: center;
           align-items: center;
         }
 
-        #download{
-           display: flex;
+        #download {
+          display: flex;
           justify-content: center;
           align-items: center;
-           width: 45px;
+          width: 45px;
           height: 28px;
           border-radius: 4px;
           border: 1px solid rgb(207, 207, 207);
           background-color: white;
           cursor: pointer;
 
-          img{
+          img {
             width: 16px;
             height: 16px;
           }
         }
 
-        #add-helper, .excelbtn {
+        #add-helper,
+        .excelbtn {
           width: 45px;
           height: 28px;
           border-radius: 4px;

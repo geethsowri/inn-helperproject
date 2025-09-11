@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class HelperformPage3Component implements OnInit{
   @Output () changePage = new EventEmitter();
+  profilePreviewUrl: string | null = null;
 
   onPageChange(){
     this.changePage.emit(2);
