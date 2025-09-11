@@ -6,7 +6,7 @@
 
   <div class="helper-form" [formGroup]="form">
     <div class="profile-img" (click)="fileUpload()">
-      <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput (change)="onFileChange($event)">
+      <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput (change)="onProfileFileChange($event)">
       <img src="assets/images/cloud_download.png" alt="upload">
       <div>
         <p>Upload photo</p>
@@ -84,8 +84,8 @@
 
     <div class="document">
       <p>KYC Document*</p>
-      <div class="profile-img doc" (click)="fileUpload()">
-        <input type="file" accept="image/*, application/pdf" hidden #fileInput>
+      <div class="profile-img doc" (click)="kycfileUpload()">
+        <input type="file" accept="image/*, application/pdf" hidden #kycfileInput (change)="onKycFileChange($event)">
         <div>
           <img src="assets/images/plus.png" alt="Upload">
         </div>

@@ -1,8 +1,8 @@
 <div class="addHelperpage">
     <app-form-tracker [categ]="category"></app-form-tracker> 
     <form [formGroup]="helperForm" (ngSubmit)="submitHelperForm()">
-        <app-helperform-page1 [form]="helperForm" *ngIf="category() == 1" class="helperform" (changePage)="pageChanged($event)"></app-helperform-page1>
-        <app-helperform-page2 [form]="helperForm" *ngIf="category() == 2" class="helperform" (changePage)="pageChanged($event)" [categoryNum]="category()"></app-helperform-page2>
+        <app-helperform-page1 [form]="helperForm" *ngIf="category() == 1" class="helperform" (changePage)="pageChanged($event)" (profileFileSelected)="onProfileFileSelected($event)" (kycFileSelected)="onKycFileSelected($event)"></app-helperform-page1>
+        <app-helperform-page2 [form]="helperForm" *ngIf="category() == 2" class="helperform" (changePage)="pageChanged($event)" [categoryNum]="category()" (fileSelected)="onProfileFileSelected($event)"></app-helperform-page2>
         <app-helperform-page3 [form]="helperForm" *ngIf="category() == 3" class="helperform" (changePage)="pageChanged($event)"></app-helperform-page3>
     </form>
 </div>

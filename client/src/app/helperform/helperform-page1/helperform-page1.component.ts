@@ -31,20 +31,28 @@ export class HelperformPage1Component{
     this.fileInput.nativeElement.click();
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.form.patchValue({ profile: file });
-      this.form.get('profile')?.updateValueAndValidity();
-    }
-  }
-
   @ViewChild('kycfileInput') kycfileInput!: ElementRef<HTMLInputElement>;
   kycfileUpload() {
     this.kycfileInput.nativeElement.click();
   }
 
   @Output() changePage = new EventEmitter<number>();
+  @Output() profileFileSelected = new EventEmitter<File>();
+  @Output() kycFileSelected = new EventEmitter<File>();
+
+  onProfileFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.profileFileSelected.emit(file);
+    }
+  }
+
+  onKycFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.kycFileSelected.emit(file);
+    }
+  }
 
   onPageChange() {
     if (this.form.invalid) {

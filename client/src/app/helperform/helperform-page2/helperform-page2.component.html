@@ -5,7 +5,7 @@
         <span>Upload related documents. This step is optional.</span>
         <div class="document">
             <div class="profile-img doc" (click)="fileUpload()">
-                <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput>
+                <input type="file" name="profile" id="profileimg" accept="image/*" hidden #fileInput (change)="onFileChange($event)">
                 <div>
                     <img src="assets/images/plus.png" alt="Upload">
                 </div>

@@ -1,4 +1,5 @@
 import { Component,OnInit,signal, inject, ViewChild, ElementRef } from '@angular/core';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FormTrackerComponent } from './form-tracker/form-tracker.component';
 import { HelperformPage1Component } from './helperform-page1/helperform-page1.component';
 import { HelperformPage2Component } from './helperform-page2/helperform-page2.component';
@@ -17,6 +18,7 @@ import { take } from 'rxjs';
   selector: 'app-helperform',
   standalone: true,
   imports: [
+    SidebarComponent,
     FormTrackerComponent,
     HelperformPage1Component,
     HelperformPage2Component,
@@ -35,11 +37,23 @@ export class HelperformComponent implements OnInit {
   random: string;
   get_helpers: any;
   dup: number = 0;
+  selectedProfileFile: File | null = null;
+  selectedKycFile: File | null = null;
 
   private dialog = inject(MatDialog);
 
   pageChanged(num: number):void {
     this.category.set(num);
+  }
+
+  onProfileFileSelected(file: File) {
+    this.selectedProfileFile = file;
+    this.helperForm.patchValue({ profile: file });
+  }
+
+  onKycFileSelected(file: File) {
+    this.selectedKycFile = file;
+    this.helperForm.patchValue({ kycDocument: file });
   }
 
   helperForm!: FormGroup;
@@ -78,6 +92,9 @@ export class HelperformComponent implements OnInit {
         if (formData.hasOwnProperty(key)) {
           if (Array.isArray(formData[key])) {
             fields.push({ name: key, values: formData[key] });
+          } else if (key === 'profile' && formData[key] instanceof File) {
+            // Handle file upload separately
+            fields.push({ name: key, value: 'file_upload_pending' });
           } else {
             fields.push({ name: key, value: formData[key] });
           }
@@ -92,20 +109,79 @@ export class HelperformComponent implements OnInit {
 
         this.currenthelper = payload;
 
-        this.service.addHelper(payload).subscribe(res => {
-          const dialogRef = this.dialog.open(DialogComponent, {
-            data: {
-              ...this.currenthelper,
-              deletion: 1,
-            },
-            height: '400px',
-            width: '550px'
-          });
+        // Handle file uploads if any files are selected
+        const uploadPromises = [];
+        
+        if (this.selectedProfileFile) {
+          uploadPromises.push(this.service.uploadProfilePicture(this.selectedProfileFile).toPromise());
+        }
+        
+        if (this.selectedKycFile) {
+          uploadPromises.push(this.service.uploadKycDocument(this.selectedKycFile).toPromise());
+        }
 
-          dialogRef.afterClosed().subscribe(() => {
-            this.router.navigate(['/helpers']);
+        if (uploadPromises.length > 0) {
+          Promise.all(uploadPromises).then(uploadResponses => {
+            // Update fields with uploaded file paths
+            uploadResponses.forEach((uploadResponse, index) => {
+              if (uploadResponse) {
+                const fieldName = index === 0 && this.selectedProfileFile ? 'profile' : 'kycDocument';
+                const fieldIndex = payload.fields.findIndex(field => field.name === fieldName);
+                if (fieldIndex !== -1) {
+                  payload.fields[fieldIndex].value = uploadResponse.filePath || uploadResponse.fileName;
+                }
+              }
+            });
+            
+            this.service.addHelper(payload).subscribe(res => {
+              const dialogRef = this.dialog.open(DialogComponent, {
+                data: {
+                  ...this.currenthelper,
+                  deletion: 1,
+                },
+                height: '400px',
+                width: '550px'
+              });
+
+              dialogRef.afterClosed().subscribe(() => {
+                this.router.navigate(['/helpers']);
+              });
+            });
+          }).catch(error => {
+            console.error('Error uploading files:', error);
+            // Still proceed with form submission even if file upload fails
+            this.service.addHelper(payload).subscribe(res => {
+              const dialogRef = this.dialog.open(DialogComponent, {
+                data: {
+                  ...this.currenthelper,
+                  deletion: 1,
+                },
+                height: '400px',
+                width: '550px'
+              });
+
+              dialogRef.afterClosed().subscribe(() => {
+                this.router.navigate(['/helpers']);
+              });
+            });
           });
-        });
+        } else {
+          // No files to upload, proceed directly
+          this.service.addHelper(payload).subscribe(res => {
+            const dialogRef = this.dialog.open(DialogComponent, {
+              data: {
+                ...this.currenthelper,
+                deletion: 1,
+              },
+              height: '400px',
+              width: '550px'
+            });
+
+            dialogRef.afterClosed().subscribe(() => {
+              this.router.navigate(['/helpers']);
+            });
+          });
+        }
       });
 
     } else {
