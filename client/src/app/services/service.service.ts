@@ -62,4 +62,16 @@ export class ServiceService {
       responseType: 'blob'
     });
   }
+
+  uploadProfilePicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('profile', file);
+    return this.http.post('http://localhost:3002/upload-profile', formData);
+  }
+
+  uploadKycDocument(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('kyc', file);
+    return this.http.post('http://localhost:3002/upload-kyc', formData);
+  }
 }
