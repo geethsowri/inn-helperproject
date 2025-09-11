@@ -34,19 +34,19 @@ form {
 
   .phone-input-group {
     display: flex;
-    align-items: center; 
+    align-items: center;
     gap: 10px;
 
     .phone {
-        flex: 0 0 100px;
-        width: 5px;
+      flex: 0 0 100px;
+      width: 5px;
     }
 
     input[type="tel"] {
-        flex: 1;
-        height: 50px;
+      flex: 1;
+      height: 50px;
     }
-    }
+  }
 
 
   .error-message {
