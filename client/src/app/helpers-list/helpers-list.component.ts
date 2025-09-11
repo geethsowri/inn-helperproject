@@ -46,7 +46,7 @@ export class HelpersListComponent {
     if (this.helpers() && this.helpers().length > 0) {
       this.selectedHelper = this.helpers()[0];
     }
-    else{
+    else {
       this.selectedHelper = null;
     }
 
@@ -110,9 +110,7 @@ export class HelpersListComponent {
             verticalPosition: 'bottom',
             panelClass: ['snackbar-success']
           });
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/helpers']);
-          });
+          this.all_helpers = this.all_helpers.filer((h: any) => h._id != helper._id);
         });
       }
     });

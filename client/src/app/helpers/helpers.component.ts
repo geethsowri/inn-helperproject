@@ -29,7 +29,7 @@ function getFieldValue(fields: any[], key: string): string {
   styleUrl: './helpers.component.scss'
 })
 export class HelpersComponent implements OnInit {
-  
+
   helpers_number = signal(0);
   all_helpers: any;
   searchSignal = signal('');
@@ -38,12 +38,12 @@ export class HelpersComponent implements OnInit {
   showdropdown_filter: boolean = false;
   filtered_helpers: any;
   tooltipText = "Upload data using excel";
-  
+
   @ViewChild('servicedropdown') servicedropdown!: SelectDropdownComponent;
   @ViewChild('ordropdown') ordropdown!: SelectDropdownComponent;
   @ViewChild(HelpersListComponent) child!: HelpersListComponent;
-  
-  constructor(private service:ServiceService,private router:Router, private el: ElementRef, private route: ActivatedRoute,) {}
+
+  constructor(private service: ServiceService, private router: Router, private el: ElementRef, private route: ActivatedRoute,) { }
 
   @HostListener('document:click', ['$event'])
 
@@ -107,9 +107,9 @@ export class HelpersComponent implements OnInit {
     this.service.display().subscribe((response) => {
       this.all_helpers = response;
       this.helpers_number.set(this.all_helpers.length);
-      });
+    });
 
-    if(this.all_helpers){
+    if (this.all_helpers) {
       this.all_helpers.sort((a, b) => {
         const val1 = (getFieldValue(a.fields, 'fullName') || '').toLowerCase();
         const val2 = (getFieldValue(b.fields, 'fullName') || '').toLowerCase();
@@ -151,7 +151,7 @@ export class HelpersComponent implements OnInit {
 
   @ViewChild('excelFileClick') fileclick!: ElementRef<HTMLInputElement>;
 
-  activateInput(){
+  activateInput() {
     this.fileclick.nativeElement.click();
   }
 
@@ -161,7 +161,7 @@ export class HelpersComponent implements OnInit {
     });
   }
 
-  DownloadasExcel(){
+  DownloadasExcel() {
     this.service.downloadfunc(this.all_helpers).subscribe((data: Blob) => {
       const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = window.URL.createObjectURL(blob);

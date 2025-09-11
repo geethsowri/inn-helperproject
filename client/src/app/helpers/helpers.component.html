@@ -3,7 +3,7 @@
 
         <div class="heading">
             <p>Helpers</p>
-            <img src="/assets/images/more.png" alt="more">
+            <!-- <img src="/assets/images/more.png" alt="more"> -->
         </div>
 
         <div class="line"></div>
@@ -34,14 +34,14 @@
                     <div class="filter-options" *ngIf="showdropdown_filter">
                         <label for="service">Type of Service</label>
                         <select id="service" [(ngModel)]="selectedService">
-                        <option value="" disabled selected>Select Type of Service</option>
-                        <option *ngFor="let option of serviceOptions" [value]="option">{{ option }}</option>
+                            <option value="" disabled selected>Select Type of Service</option>
+                            <option *ngFor="let option of serviceOptions" [value]="option">{{ option }}</option>
                         </select>
 
                         <label for="organization">Organization Name</label>
                         <select id="organization" [(ngModel)]="selectedOrganization">
-                        <option value="" disabled selected>Select Organization</option>
-                        <option *ngFor="let org of organizationOptions" [value]="org">{{ org }}</option>
+                            <option value="" disabled selected>Select Organization</option>
+                            <option *ngFor="let org of organizationOptions" [value]="org">{{ org }}</option>
                         </select>
 
                         <div class="filter-btns">
@@ -55,7 +55,8 @@
                 </button>
                 <div class="search-bar">
                     <img src="/assets/images/search.png" alt="search icon">
-                    <input type="search" name="search" id="search-employee" placeholder="Name, Employee ID, Phone" [value]="searchSignal()" (input)="searchSignal.set($any($event.target).value)">
+                    <input type="search" name="search" id="search-employee" placeholder="Name, Employee ID, Phone"
+                        [value]="searchSignal()" (input)="searchSignal.set($any($event.target).value)">
                 </div>
                 <span>{{helpers_number()}} helpers</span>
             </div>
@@ -66,7 +67,8 @@
                 </button>
                 <div class="excelbtn" (click)="activateInput()" [attr.title]="tooltipText">
                     <img src="assets/images/download.png" alt="upload">
-                    <input type="file" id="excelfile" accept=".xls,.xlsx" (change)="openExcel($event)" #excelFileClick hidden>
+                    <input type="file" id="excelfile" accept=".xls,.xlsx" (change)="openExcel($event)" #excelFileClick
+                        hidden>
                 </div>
                 <button id="add-helper" (click)="addNewHelper()">
                     <img src="assets/images/plus.png" alt="add">
