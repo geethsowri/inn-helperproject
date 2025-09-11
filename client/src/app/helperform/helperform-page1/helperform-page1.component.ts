@@ -21,7 +21,7 @@ import { ReactiveFormsModule, FormGroup } from '@angular/forms';
   styleUrl: './helperform-page1.component.scss'
 })
 
-export class HelperformPage1Component{
+export class HelperformPage1Component {
 
   pattern: string = '[0-9]{10}';
   vehicle: boolean = false;
@@ -39,13 +39,23 @@ export class HelperformPage1Component{
   @Output() changePage = new EventEmitter<number>();
   @Output() profileFileSelected = new EventEmitter<File>();
   @Output() kycFileSelected = new EventEmitter<File>();
+  @Output() profilePreviewGenerated = new EventEmitter<string>();
 
   onProfileFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
+      // Emit the raw file for backend
       this.profileFileSelected.emit(file);
+  
+      // Generate a preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.profilePreviewGenerated.emit(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   }
+
 
   onKycFileChange(event: any) {
     const file = event.target.files[0];
@@ -62,7 +72,7 @@ export class HelperformPage1Component{
     this.changePage.emit(2);
   }
 
-  getValue(){
+  getValue() {
     console.log(this.form.get('serviceType').value);
   }
 
@@ -73,7 +83,7 @@ export class HelperformPage1Component{
       const control = this.form.get('serviceType');
       setTimeout(() => {
         if (control?.touched) {
-          if(control.value == 'Driver'){
+          if (control.value == 'Driver') {
             this.vehicle = true;
           }
         }

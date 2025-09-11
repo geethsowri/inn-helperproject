@@ -1,4 +1,4 @@
-import { Component,OnInit,signal, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FormTrackerComponent } from './form-tracker/form-tracker.component';
 import { HelperformPage1Component } from './helperform-page1/helperform-page1.component';
@@ -27,7 +27,7 @@ import { take } from 'rxjs';
     ReactiveFormsModule
   ],
   templateUrl: './helperform.component.html',
-  styleUrl: './helperform.component.scss'
+  styleUrls: ['./helperform.component.scss']
 })
 export class HelperformComponent implements OnInit {
 
@@ -39,16 +39,25 @@ export class HelperformComponent implements OnInit {
   dup: number = 0;
   selectedProfileFile: File | null = null;
   selectedKycFile: File | null = null;
+  profilePreviewUrl: string | null = null;
 
   private dialog = inject(MatDialog);
 
-  pageChanged(num: number):void {
+  pageChanged(num: number): void {
     this.category.set(num);
+  }
+
+  onProfilePreviewGenerated(preview: string) {
+    this.profilePreviewUrl = preview;
   }
 
   onProfileFileSelected(file: File) {
     this.selectedProfileFile = file;
-    this.helperForm.patchValue({ profile: file });
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profilePreviewUrl = reader.result as string
+    };
+    reader.readAsDataURL(file);
   }
 
   onKycFileSelected(file: File) {
@@ -58,7 +67,7 @@ export class HelperformComponent implements OnInit {
 
   helperForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private service:ServiceService, private router:Router) {}
+  constructor(private fb: FormBuilder, private service: ServiceService, private router: Router) { }
 
   ngOnInit(): void {
     this.helperForm = this.fb.group({
@@ -83,6 +92,10 @@ export class HelperformComponent implements OnInit {
 
   }
 
+  onProfileSelected(photoUrl: string) {
+    this.data['photoUrl'] = photoUrl;
+  }
+
   submitHelperForm() {
     if (this.helperForm.valid) {
       const formData = this.helperForm.value;
@@ -103,19 +116,19 @@ export class HelperformComponent implements OnInit {
 
       this.service.get_empId().subscribe(emp_id => {
         const payload = {
-          emp_id: emp_id, 
-          fields: fields  
+          emp_id: emp_id,
+          fields: fields
         };
 
         this.currenthelper = payload;
 
         // Handle file uploads if any files are selected
         const uploadPromises = [];
-        
+
         if (this.selectedProfileFile) {
           uploadPromises.push(this.service.uploadProfilePicture(this.selectedProfileFile).toPromise());
         }
-        
+
         if (this.selectedKycFile) {
           uploadPromises.push(this.service.uploadKycDocument(this.selectedKycFile).toPromise());
         }
@@ -132,7 +145,7 @@ export class HelperformComponent implements OnInit {
                 }
               }
             });
-            
+
             this.service.addHelper(payload).subscribe(res => {
               const dialogRef = this.dialog.open(DialogComponent, {
                 data: {
@@ -254,7 +267,7 @@ export class HelperformComponent implements OnInit {
 
           if (existingHelper) {
             const helperId = existingHelper._id;
-            this.service.updateHelper(helperId, fields ).subscribe(() => {
+            this.service.updateHelper(helperId, fields).subscribe(() => {
               completedRequests++;
               if (completedRequests === rowsToInsertOrUpdate) {
                 this.openDialogAndRedirect();
@@ -294,5 +307,5 @@ export class HelperformComponent implements OnInit {
       this.router.navigate(['/helpers']);
     });
   }
-  
+
 }

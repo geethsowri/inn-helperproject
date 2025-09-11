@@ -1,6 +1,16 @@
 <div class="container">
   <div class="profile-header">
-    <div class="initials">{{ data['fullName'].slice(0,2)}}</div>
+    <div class="profile-pic">
+      <ng-container *ngIf="profilePreviewUrl; else initialsBlock">
+        <img [src]="profilePreviewUrl" alt="profile photo">
+      </ng-container>
+      <ng-template #initialsBlock>
+        <div class="initials">
+          
+        </div>
+      </ng-template>
+    </div>
+
     <div>
       <h2>{{ data['fullName'] }}</h2>
       <p class="role">{{ data['serviceType'] }}</p>
@@ -11,10 +21,14 @@
     <h3>Personal Details</h3>
     <ul>
       <li><strong>Gender:</strong> {{ data['gender'] }}</li>
-      <li><strong>Languages:</strong> {{ data['languages'].join(', ') }}</li>
+      <li><strong>Languages:</strong> {{ data['languages']?.join(', ') }}</li>
       <li><strong>Mobile No.:</strong> {{ data['phonePrefix'] }} {{ data['phone'] }}</li>
       <li><strong>Email ID:</strong> {{ data['email'] || '-' }}</li>
-      <li><strong>KYC Document:</strong> <a href="#" (click)="$event.preventDefault()"><img src="assets/images/view.png" alt="view"></a></li>
+      <li><strong>KYC Document:</strong>
+        <a href="#" (click)="$event.preventDefault()">
+          <img src="assets/images/view.png" alt="view">
+        </a>
+      </li>
     </ul>
   </div>
 
@@ -22,16 +36,16 @@
     <h3>Service Details</h3>
     <ul>
       <li><strong>Type:</strong> {{ data['serviceType'] }}</li>
-      <li><strong>Organization:</strong>{{ data['organization'] }}</li>
+      <li><strong>Organization:</strong> {{ data['organization'] }}</li>
       <li><strong>Joined On:</strong> 16 Jun 2025</li>
     </ul>
   </div>
 </div>
 
 <div class="buttons">
-    <button (click)="onPageChange()" id="previous">
-        <p>Previous</p>
-        <img src="assets/images/arrow-up.png" alt="next">
-    </button>
-    <input type="submit" value="Add helper">
+  <button (click)="onPageChange()" id="previous">
+    <p>Previous</p>
+    <img src="assets/images/arrow-up.png" alt="next">
+  </button>
+  <input type="submit" value="Add helper">
 </div>
