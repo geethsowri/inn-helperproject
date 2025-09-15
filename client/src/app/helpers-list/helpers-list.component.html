@@ -3,7 +3,12 @@
     <div *ngFor="let helper of filteredHelpers() || all_helpers" class="helper-card"
       [ngClass]="{ 'selected': helper === selectedHelper }" (click)="selectHelper(helper)">
       <div class="profilephoto">
-        {{ getFieldValue(helper.fields, 'fullName') | slice:0:2 }}
+        <ng-container *ngIf="hasProfileImage(helper.fields); else initialsBlock">
+          <img [src]="getProfileImageUrl(helper.fields)" alt="profile photo">
+        </ng-container>
+        <ng-template #initialsBlock>
+          {{ getFieldValue(helper.fields, 'fullName') | slice:0:2 }}
+        </ng-template>
       </div>
       <div class="detail">
         <p>{{ getFieldValue(helper.fields, 'fullName') }}</p>
@@ -24,8 +29,8 @@
       <div class="profile-header">
         <div class="left-section">
           <div class="profile-pic">
-            <ng-container *ngIf="getFieldValue(selectedHelper.fields, 'photoUrl'); else initialsBlock">
-              <img [src]="getFieldValue(selectedHelper.fields, 'photoUrl')" alt="profile photo">
+            <ng-container *ngIf="hasProfileImage(selectedHelper.fields); else initialsBlock">
+              <img [src]="getProfileImageUrl(selectedHelper.fields)" alt="profile photo">
             </ng-container>
             <ng-template #initialsBlock>
               <div class="initials">
@@ -51,7 +56,7 @@
         <h4>Employee ID</h4>
         <div class="item">
           <span>Identification Card</span>
-          <a href="" target="_blank">View</a>
+          <a href="javascript:void(0)" (click)="openIdCard(selectedHelper)">View</a>
         </div>
         <div class="item">
           <span>Employee Code</span>
