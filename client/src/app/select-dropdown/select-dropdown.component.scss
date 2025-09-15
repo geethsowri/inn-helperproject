@@ -16,4 +16,8 @@ mat-form-field{
 .full-width {
   width: 100%;
   background-color: white;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }

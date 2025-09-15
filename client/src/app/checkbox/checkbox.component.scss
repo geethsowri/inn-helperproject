@@ -9,6 +9,12 @@
 ul {
   list-style-type: none;
   margin-top: 4px;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 p{

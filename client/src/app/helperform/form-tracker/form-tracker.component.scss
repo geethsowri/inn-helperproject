@@ -37,6 +37,14 @@
   width: 19vw;
   border: 1px solid #d6d6d6;
   border-radius: 8px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+    min-height: 200px;
+    margin-bottom: 20px;
+  }
 
   .tracker-line {
     display: flex;
@@ -100,6 +108,12 @@
     text-align: flex-start;
     height: 260px;
     margin-left: 14px;
+    
+    @media (max-width: 768px) {
+      height: auto;
+      margin-left: 10px;
+      gap: 10px;
+    }
 
     .text1,
     .text2,
