@@ -1,5 +1,4 @@
 import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FormTrackerComponent } from './form-tracker/form-tracker.component';
 import { HelperformPage1Component } from './helperform-page1/helperform-page1.component';
 import { HelperformPage2Component } from './helperform-page2/helperform-page2.component';
@@ -11,14 +10,14 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import * as XLSX from 'xlsx';
-import { take } from 'rxjs';
+import { take, firstValueFrom } from 'rxjs';
+import { IdCardComponent } from '../id-card/id-card.component';
 
 
 @Component({
   selector: 'app-helperform',
   standalone: true,
   imports: [
-    SidebarComponent,
     FormTrackerComponent,
     HelperformPage1Component,
     HelperformPage2Component,
@@ -52,7 +51,10 @@ export class HelperformComponent implements OnInit {
   }
 
   onProfileFileSelected(file: File) {
+    console.log('Profile file selected:', file);
     this.selectedProfileFile = file;
+    this.helperForm.patchValue({ profile: file });
+    console.log('Form value after patch:', this.helperForm.value);
     const reader = new FileReader();
     reader.onload = () => {
       this.profilePreviewUrl = reader.result as string
@@ -92,11 +94,21 @@ export class HelperformComponent implements OnInit {
 
   }
 
-  onProfileSelected(photoUrl: string) {
-    this.data['photoUrl'] = photoUrl;
+  onProfileSelected(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profilePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
+
   submitHelperForm() {
+    console.log('Form valid:', this.helperForm.valid);
+    console.log('Form value:', this.helperForm.value);
+    console.log('Selected profile file:', this.selectedProfileFile);
+    console.log('Selected KYC file:', this.selectedKycFile);
+
     if (this.helperForm.valid) {
       const formData = this.helperForm.value;
       const fields = [];
@@ -114,6 +126,13 @@ export class HelperformComponent implements OnInit {
         }
       }
 
+      // Ensure profile field is always included
+      if (!fields.find(f => f.name === 'profile')) {
+        fields.push({ name: 'profile', value: null });
+      }
+
+      console.log('Fields array before upload:', fields);
+
       this.service.get_empId().subscribe(emp_id => {
         const payload = {
           emp_id: emp_id,
@@ -126,25 +145,32 @@ export class HelperformComponent implements OnInit {
         const uploadPromises = [];
 
         if (this.selectedProfileFile) {
-          uploadPromises.push(this.service.uploadProfilePicture(this.selectedProfileFile).toPromise());
+          console.log('Uploading profile file:', this.selectedProfileFile);
+          uploadPromises.push(firstValueFrom(this.service.uploadProfilePicture(this.selectedProfileFile)));
+        } else {
+          console.log('No profile file selected');
         }
 
         if (this.selectedKycFile) {
-          uploadPromises.push(this.service.uploadKycDocument(this.selectedKycFile).toPromise());
+          console.log('Uploading KYC file:', this.selectedKycFile);
+          uploadPromises.push(firstValueFrom(this.service.uploadKycDocument(this.selectedKycFile)));
         }
 
         if (uploadPromises.length > 0) {
           Promise.all(uploadPromises).then(uploadResponses => {
+            console.log('Upload responses:', uploadResponses);
             // Update fields with uploaded file paths
             uploadResponses.forEach((uploadResponse, index) => {
               if (uploadResponse) {
                 const fieldName = index === 0 && this.selectedProfileFile ? 'profile' : 'kycDocument';
                 const fieldIndex = payload.fields.findIndex(field => field.name === fieldName);
+                console.log(`Updating field ${fieldName} at index ${fieldIndex} with value:`, uploadResponse.filePath || uploadResponse.fileName);
                 if (fieldIndex !== -1) {
                   payload.fields[fieldIndex].value = uploadResponse.filePath || uploadResponse.fileName;
                 }
               }
             });
+            console.log('Final payload before submission:', payload);
 
             this.service.addHelper(payload).subscribe(res => {
               const dialogRef = this.dialog.open(DialogComponent, {
@@ -307,5 +333,4 @@ export class HelperformComponent implements OnInit {
       this.router.navigate(['/helpers']);
     });
   }
-
 }
