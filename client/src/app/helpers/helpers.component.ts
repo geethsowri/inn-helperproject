@@ -1,5 +1,4 @@
 import { Component, OnInit, signal, ViewChild, ElementRef, HostListener, AfterViewInit, effect, runInInjectionContext, inject, EnvironmentInjector, computed, Signal, Injector } from '@angular/core';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HelpersListComponent } from '../helpers-list/helpers-list.component';
 import { ServiceService } from '../services/service.service';
 import { Router } from '@angular/router';
@@ -18,7 +17,6 @@ function getFieldValue(fields: any[], key: string): string {
   selector: 'app-helpers',
   standalone: true,
   imports: [
-    SidebarComponent,
     HelpersListComponent,
     CommonModule,
     SelectDropdownComponent,

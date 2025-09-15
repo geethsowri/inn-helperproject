@@ -3,9 +3,14 @@
   height: 100vh;
 
   .main-section {
-    width: 80vw;
+    width: 100vw;
     height: 100vh;
     overflow-y: auto;
+
+    @media (max-width: 768px) {
+      width: 100vw;
+      padding: 0 10px;
+    }
 
     .heading {
       display: flex;
@@ -26,12 +31,28 @@
         height: 30px;
         cursor: pointer;
       }
+
+      @media (max-width: 768px) {
+        padding: 0 10px;
+        height: auto;
+        min-height: 60px;
+
+        p {
+          font-size: 18px;
+          margin-top: 10px;
+        }
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
     }
 
     .line {
-      height: 10px;
+      height: 1px;
       width: 100%;
-      background-color: rgb(255, 0, 0);
+      background-color: #ccc;
     }
 
     .buttons {
@@ -42,10 +63,24 @@
       height: 9.2%;
       width: 100%;
 
+      @media (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 10px;
+        gap: 15px;
+        align-items: stretch;
+      }
+
       .first-btns {
         display: flex;
         align-items: center;
         gap: 10px;
+
+        @media (max-width: 768px) {
+          flex-wrap: wrap;
+          gap: 8px;
+          justify-content: center;
+        }
 
         button {
           width: 51px;
@@ -271,6 +306,12 @@
           border-radius: 5px;
           gap: 9px;
 
+          @media (max-width: 768px) {
+            width: 100%;
+            min-width: 200px;
+            height: 40px;
+          }
+
           img {
             width: 17px;
             height: 17px;
@@ -304,6 +345,13 @@
         justify-content: flex-end;
         align-items: center;
         gap: 10px;
+
+        @media (max-width: 768px) {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
 
         .excelbtn {
           display: flex;
@@ -372,6 +420,11 @@
       width: 80vw;
       overflow-y: auto;
       border-radius: 7px;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        margin: 0;
+      }
     }
   }
 }
