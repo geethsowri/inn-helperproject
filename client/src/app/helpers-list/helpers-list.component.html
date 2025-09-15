@@ -4,7 +4,8 @@
       [ngClass]="{ 'selected': helper === selectedHelper }" (click)="selectHelper(helper)">
       <div class="profilephoto">
         <ng-container *ngIf="hasProfileImage(helper.fields); else initialsBlock">
-          <img [src]="getProfileImageUrl(helper.fields)" alt="profile photo">
+          <img *ngIf="hasProfileImage(helper.fields); else initialsBlock" [src]="getProfileImageUrl(helper.fields)">
+
         </ng-container>
         <ng-template #initialsBlock>
           {{ getFieldValue(helper.fields, 'fullName') | slice:0:2 }}
