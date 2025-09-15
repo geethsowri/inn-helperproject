@@ -1,27 +1,28 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-helperform-page3',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './helperform-page3.component.html',
   styleUrl: './helperform-page3.component.scss'
 })
-export class HelperformPage3Component implements OnInit{
-  @Output () changePage = new EventEmitter();
+export class HelperformPage3Component implements OnInit {
+  @Output() changePage = new EventEmitter();
   profilePreviewUrl: string | null = null;
 
-  onPageChange(){
+  onPageChange() {
     this.changePage.emit(2);
   }
 
   user: any = []
 
-  @Input()  form: FormGroup;
+  @Input() form: FormGroup;
 
   data: any;
-  ele:any;
+  ele: any;
 
   ngOnInit() {
     this.data = this.form.value;

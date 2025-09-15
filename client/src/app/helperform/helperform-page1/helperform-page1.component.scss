@@ -10,6 +10,13 @@ $label-color: #6e6e6e;
   background: white;
   overflow-y: auto;
   height: 90%;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 1rem 0;
+    padding: 1rem;
+    height: auto;
+  }
 
   .form-header {
     margin-bottom: 2rem;
@@ -103,6 +110,20 @@ $label-color: #6e6e6e;
       input[type="tel"] {
         flex: 1;
         height: 58px;
+      }
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        
+        .phone {
+          width: 100%;
+        }
+        
+        input[type="tel"] {
+          height: 48px;
+        }
       }
     }
 

@@ -43,6 +43,7 @@ export class HelperformPage1Component {
 
   onProfileFileChange(event: any) {
     const file = event.target.files[0];
+    console.log('File selected in page1:', file);
     if (file) {
       // Emit the raw file for backend
       this.profileFileSelected.emit(file);
