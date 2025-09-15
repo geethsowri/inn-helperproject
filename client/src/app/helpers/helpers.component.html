@@ -58,7 +58,14 @@
                     <input type="search" name="search" id="search-employee" placeholder="Name, Employee ID, Phone"
                         [value]="searchSignal()" (input)="searchSignal.set($any($event.target).value)">
                 </div>
-                <span>{{helpers_number()}} helpers</span>
+                <!-- <span>{{helpers_number()}} helpers</span> -->
+                <span class="helpers-count">
+                    {{ searchSignal().trim()
+                    ? (filtered_helpers().length + ' of ' + all_helpers().length + ' helpers')
+                    : (all_helpers().length + ' helpers') }}
+                </span>
+
+
             </div>
 
             <div class="last-btns">
@@ -78,7 +85,8 @@
         </div>
 
         <section class="helpers-list">
-            <app-helpers-list [search]="searchSignal" [helpers]="filtered_helpers"></app-helpers-list>
+            <app-helpers-list [search]="searchSignal" [helpers]="filtered_helpers()">
+            </app-helpers-list>
         </section>
 
     </div>
