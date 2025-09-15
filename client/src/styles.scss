@@ -42,7 +42,40 @@ $my-theme: mat.define-light-theme((
     font-family: "Mulish", sans-serif;
 }
 
-html, body { height: 100%; }
+html, body { 
+    height: 100%; 
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Responsive breakpoints */
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1200px;
+
+/* Mobile-first responsive utilities */
+@media (max-width: $mobile) {
+    .mobile-hidden {
+        display: none !important;
+    }
+    
+    .mobile-full-width {
+        width: 100% !important;
+    }
+    
+    .mobile-stack {
+        flex-direction: column !important;
+    }
+    
+    .mobile-center {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: $mobile + 1px) {
+    .desktop-hidden {
+        display: none !important;
+    }
+}
 
 .error-message {
   color: red;
