@@ -84,8 +84,8 @@
 
     <div class="document">
       <p>KYC Document*</p>
-      <div class="profile-img doc" (click)="kycfileUpload()">
-        <input type="file" accept="image/*, application/pdf" hidden #kycfileInput (change)="onKycFileChange($event)">
+      <div class="profile-img doc" (click)="openKycDialog()">
+        Upload KYC Document
         <div>
           <img src="assets/images/plus.png" alt="Upload">
         </div>

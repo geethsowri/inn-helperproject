@@ -1,0 +1,28 @@
+<form [formGroup]="kycForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>ID Type</mat-label>
+      <mat-select formControlName="idType">
+        <mat-option value="aadhar">Aadhar</mat-option>
+        <mat-option value="pan">PAN</mat-option>
+        <mat-option value="passport">Passport</mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>ID Number</mat-label>
+      <input matInput formControlName="idNumber" />
+    </mat-form-field>
+  
+    <input type="file" (change)="onFileSelected($event)" />
+  
+    <div class="actions">
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Upload</button>
+    </div>
+  </form>
+  

@@ -1,10 +1,10 @@
 <div class="container">
   <div class="profile-header">
     <div class="profile-pic">
-      <ng-container *ngIf="profilePreviewUrl; else initialsBlock">
+      <ng-container *ngIf="profilePreviewUrl; else initialsBlockList">
         <img [src]="profilePreviewUrl" alt="profile photo">
       </ng-container>
-      <ng-template #initialsBlock>
+      <ng-template #initialsBlockList>
         <div class="initials">
         </div>
       </ng-template>
@@ -46,5 +46,5 @@
     <p>Previous</p>
     <img src="assets/images/arrow-up.png" alt="next">
   </button>
-  <input type="submit" value="Add helper">
+  <button type="button" (click)="onSubmit()" class="submit-btn">Add helper</button>
 </div>

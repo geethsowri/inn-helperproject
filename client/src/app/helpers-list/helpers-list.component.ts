@@ -7,6 +7,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { IdCardComponent } from '../id-card/id-card.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+// helper function for filtering search
 function getFieldValue(fields: any[], key: string): string {
   const field = fields.find(f => f.name === key);
   return (field?.value ?? '').toLowerCase();
@@ -15,10 +16,7 @@ function getFieldValue(fields: any[], key: string): string {
 @Component({
   selector: 'app-helpers-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatSnackBarModule
-  ],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './helpers-list.component.html',
   styleUrl: './helpers-list.component.scss'
 })
@@ -28,33 +26,36 @@ export class HelpersListComponent {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  all_helpers: any;
-  selectedHelper: any;
+  // reactive state
+  all_helpers = signal<any[]>([]);
+  selectedHelper: any = null;
 
   @Input() search!: Signal<string>;
   readonly helpers = input<any[]>();
 
+  constructor() {
+    // auto-update selectedHelper whenever filteredHelpers changes
+    effect(() => {
+      const list = this.filteredHelpers();
+      this.selectedHelper = list?.length > 0 ? list[0] : null;
+    });
+
+    // initial load
+    this.service.display().subscribe((response: any[]) => {
+      this.all_helpers.set(response ?? []);
+    });
+  }
+
   ngOnInit() {
     this.service.display().subscribe((response: any[]) => {
-      this.all_helpers = response ?? [];
-      this.selectedHelper = this.all_helpers[0];
-      console.log('All helpers loaded:', this.all_helpers);
-      if (this.all_helpers.length > 0) {
-        console.log('First helper fields:', this.all_helpers[0].fields);
-      }
+      this.all_helpers.set(response ?? []);
+      this.selectedHelper = this.all_helpers()[0] ?? null;
     });
   }
 
   filteredHelpers = computed(() => {
     const searchTerm = this.search()?.toLowerCase().trim() ?? '';
-    const baseList = this.helpers()?.length > 0 ? this.helpers() : this.all_helpers;
-    if (this.helpers() && this.helpers().length > 0) {
-      this.selectedHelper = this.helpers()[0];
-    }
-    else {
-      this.selectedHelper = null;
-    }
-
+    const baseList = this.helpers()?.length > 0 ? this.helpers() : this.all_helpers();
 
     if (searchTerm) {
       return baseList.filter(helper => {
@@ -67,25 +68,10 @@ export class HelpersListComponent {
     return baseList;
   });
 
-  constructor() {
-    effect(() => {
-      const list = this.filteredHelpers();
-      if (list?.length > 0) {
-        this.selectedHelper = list[0];
-      } else {
-        this.selectedHelper = null;
-      }
-    });
-
-    this.service.display().subscribe((response: any[]) => {
-      this.all_helpers = response ?? [];
-    });
-  }
-
-
   selectHelper(helper: any) {
     this.selectedHelper = helper;
   }
+
   openIdCard(helper: any) {
     const plainObj: any = {};
     helper.fields.forEach((f: any) => {
@@ -102,11 +88,10 @@ export class HelpersListComponent {
         phone: plainObj.phone,
         email: plainObj.email,
         joinDate: new Date().toLocaleDateString(),
-        profile: plainObj.profile
+        profile: this.getProfileImageUrl(helper.fields)
       }
     });
   }
-
 
   getFieldValue(fields: any[], fieldName: string): string {
     const found = fields?.find(f => f.name === fieldName);
@@ -117,27 +102,25 @@ export class HelpersListComponent {
 
   hasProfileImage(fields: any[]): boolean {
     const profileField = fields?.find(f => f.name === 'profile');
-    return profileField?.value && profileField.value !== '-' && profileField.value !== null && profileField.value !== '';
+    return !!profileField?.value && profileField.value !== '-' && profileField.value !== null && profileField.value !== '';
   }
 
   getProfileImageUrl(fields: any[]): string {
     const profileField = fields?.find(f => f.name === 'profile');
-    console.log('Profile field found:', profileField);
-    console.log('All fields:', fields);
+    if (!profileField?.value) return '';
 
-    if (profileField?.value && profileField.value !== '-') {
-      // If the value is already a full URL, return it as is
-      if (profileField.value.startsWith('http')) {
-        return profileField.value;
-      }
-      // If it's a relative path, make it a full URL
-      if (profileField.value.startsWith('/uploads/')) {
-        return `http://localhost:3002${profileField.value}`;
-      }
-      // If it's just a filename, construct the full path
-      return `http://localhost:3002/uploads/${profileField.value}`;
-    }
-    return '';
+    const value = profileField.value;
+
+    // if it’s a data URL, return as-is
+    if (value.startsWith('data:')) return value;
+
+    // if full URL, return as-is
+    if (value.startsWith('http')) return value;
+
+    // relative path from backend
+    if (value.startsWith('/uploads/')) return `http://localhost:3002${value}`;
+
+    return `http://localhost:3002/uploads/${value}`;
   }
 
   editHelper(helper: any): void {
@@ -147,10 +130,7 @@ export class HelpersListComponent {
   deleteHelper(helper: any) {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '400px',
-      data: {
-        ...helper.fields,
-        deletion: 0
-      }
+      data: { ...helper.fields, deletion: 0 }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -161,7 +141,11 @@ export class HelpersListComponent {
             verticalPosition: 'bottom',
             panelClass: ['snackbar-success']
           });
-          this.all_helpers = this.all_helpers.filer((h: any) => h._id != helper._id);
+          // remove deleted helper reactively
+          this.all_helpers.update(list => list.filter(h => h._id !== helper._id));
+          if (this.selectedHelper?._id === helper._id) {
+            this.selectedHelper = this.all_helpers()[0] ?? null;
+          }
         });
       }
     });

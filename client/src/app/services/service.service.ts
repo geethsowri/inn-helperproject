@@ -69,9 +69,15 @@ export class ServiceService {
     return this.http.post('http://localhost:3002/upload-profile', formData);
   }
 
-  uploadKycDocument(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('kyc', file);
-    return this.http.post('http://localhost:3002/upload-kyc', formData);
+  uploadKycDocument(kycData: any): Observable<any> {
+    // If it's a File object, use FormData
+    if (kycData instanceof File) {
+      const formData = new FormData();
+      formData.append('kyc', kycData);
+      return this.http.post('http://localhost:3002/upload-kyc', formData);
+    } else {
+      // If it's base64 data from KYC dialog, send as JSON
+      return this.http.post('http://localhost:3002/upload-kyc-base64', kycData);
+    }
   }
 }

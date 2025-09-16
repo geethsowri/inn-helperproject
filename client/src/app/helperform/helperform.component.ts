@@ -12,6 +12,11 @@ import { DialogComponent } from '../dialog/dialog.component';
 import * as XLSX from 'xlsx';
 import { take, firstValueFrom } from 'rxjs';
 import { IdCardComponent } from '../id-card/id-card.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @Component({
@@ -50,17 +55,37 @@ export class HelperformComponent implements OnInit {
     this.profilePreviewUrl = preview;
   }
 
-  onProfileFileSelected(file: File) {
-    console.log('Profile file selected:', file);
+  // HelperformComponent.ts
+  onProfileFileSelected(file: File, helperObj: any) {
+    if (!file) return;
+
     this.selectedProfileFile = file;
-    this.helperForm.patchValue({ profile: file });
-    console.log('Form value after patch:', this.helperForm.value);
+
     const reader = new FileReader();
     reader.onload = () => {
-      this.profilePreviewUrl = reader.result as string
+      const previewUrl = reader.result as string;
+
+      // Update form control
+      this.helperForm.patchValue({ profile: previewUrl });
+
+      // Update live preview for page3
+      this.profilePreviewUrl = previewUrl;
+
+      // Update helperObj.fields for helpers list
+      if (!helperObj.fields) helperObj.fields = [];
+      const existing = helperObj.fields.find(f => f.name === 'profile');
+      if (existing) {
+        existing.value = previewUrl;
+      } else {
+        helperObj.fields.push({ name: 'profile', value: previewUrl });
+      }
+
+      console.log('Fields array after upload:', helperObj.fields);
     };
     reader.readAsDataURL(file);
   }
+
+
 
   onKycFileSelected(file: File) {
     this.selectedKycFile = file;
@@ -94,16 +119,8 @@ export class HelperformComponent implements OnInit {
 
   }
 
-  onProfileSelected(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.profilePreviewUrl = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-  }
-
-
   submitHelperForm() {
+    console.log('=== SUBMIT HELPER FORM CALLED ===');
     console.log('Form valid:', this.helperForm.valid);
     console.log('Form value:', this.helperForm.value);
     console.log('Selected profile file:', this.selectedProfileFile);
@@ -134,11 +151,13 @@ export class HelperformComponent implements OnInit {
       console.log('Fields array before upload:', fields);
 
       this.service.get_empId().subscribe(emp_id => {
+        console.log('Generated emp_id:', emp_id);
         const payload = {
           emp_id: emp_id,
           fields: fields
         };
 
+        console.log('Payload being sent to server:', JSON.stringify(payload, null, 2));
         this.currenthelper = payload;
 
         // Handle file uploads if any files are selected
@@ -153,43 +172,97 @@ export class HelperformComponent implements OnInit {
 
         if (this.selectedKycFile) {
           console.log('Uploading KYC file:', this.selectedKycFile);
-          uploadPromises.push(firstValueFrom(this.service.uploadKycDocument(this.selectedKycFile)));
+          uploadPromises.push(
+            firstValueFrom(this.service.uploadKycDocument(this.selectedKycFile)).catch(error => {
+              console.warn('KYC upload failed, continuing without KYC file:', error);
+              return null; // Return null to indicate failed upload
+            })
+          );
         }
 
         if (uploadPromises.length > 0) {
           Promise.all(uploadPromises).then(uploadResponses => {
             console.log('Upload responses:', uploadResponses);
             // Update fields with uploaded file paths
-            uploadResponses.forEach((uploadResponse, index) => {
+            let responseIndex = 0;
+            
+            if (this.selectedProfileFile) {
+              const uploadResponse = uploadResponses[responseIndex];
               if (uploadResponse) {
-                const fieldName = index === 0 && this.selectedProfileFile ? 'profile' : 'kycDocument';
-                const fieldIndex = payload.fields.findIndex(field => field.name === fieldName);
-                console.log(`Updating field ${fieldName} at index ${fieldIndex} with value:`, uploadResponse.filePath || uploadResponse.fileName);
+                const fieldIndex = payload.fields.findIndex(field => field.name === 'profile');
+                console.log(`Updating profile field at index ${fieldIndex} with value:`, uploadResponse.filePath || uploadResponse.fileName);
                 if (fieldIndex !== -1) {
                   payload.fields[fieldIndex].value = uploadResponse.filePath || uploadResponse.fileName;
                 }
               }
-            });
+              responseIndex++;
+            }
+            
+            if (this.selectedKycFile) {
+              const uploadResponse = uploadResponses[responseIndex];
+              if (uploadResponse && uploadResponse !== null) {
+                const fieldIndex = payload.fields.findIndex(field => field.name === 'kycDocument');
+                console.log(`Updating kycDocument field at index ${fieldIndex} with value:`, uploadResponse.filePath || uploadResponse.fileName);
+                if (fieldIndex !== -1) {
+                  payload.fields[fieldIndex].value = uploadResponse.filePath || uploadResponse.fileName;
+                }
+              } else {
+                console.log('KYC upload failed, keeping original KYC data');
+              }
+            }
             console.log('Final payload before submission:', payload);
 
-            this.service.addHelper(payload).subscribe(res => {
-              const dialogRef = this.dialog.open(DialogComponent, {
-                data: {
-                  ...this.currenthelper,
-                  deletion: 1,
-                },
-                height: '400px',
-                width: '550px'
-              });
+            this.service.addHelper(payload).subscribe({
+              next: (res) => {
+                console.log('Helper added successfully:', res);
+                const dialogRef = this.dialog.open(DialogComponent, {
+                  data: {
+                    ...this.currenthelper,
+                    deletion: 1,
+                  },
+                  height: '400px',
+                  width: '550px'
+                });
 
-              dialogRef.afterClosed().subscribe(() => {
-                this.router.navigate(['/helpers']);
-              });
+                dialogRef.afterClosed().subscribe(() => {
+                  this.router.navigate(['/helpers']);
+                });
+              },
+              error: (error) => {
+                console.error('Error adding helper:', error);
+                alert('Failed to add helper. Please try again.');
+              }
             });
           }).catch(error => {
             console.error('Error uploading files:', error);
             // Still proceed with form submission even if file upload fails
-            this.service.addHelper(payload).subscribe(res => {
+            this.service.addHelper(payload).subscribe({
+              next: (res) => {
+                console.log('Helper added successfully (after upload error):', res);
+                const dialogRef = this.dialog.open(DialogComponent, {
+                  data: {
+                    ...this.currenthelper,
+                    deletion: 1,
+                  },
+                  height: '400px',
+                  width: '550px'
+                });
+
+                dialogRef.afterClosed().subscribe(() => {
+                  this.router.navigate(['/helpers']);
+                });
+              },
+              error: (error) => {
+                console.error('Error adding helper (after upload error):', error);
+                alert('Failed to add helper. Please try again.');
+              }
+            });
+          });
+        } else {
+          // No files to upload, proceed directly
+          this.service.addHelper(payload).subscribe({
+            next: (res) => {
+              console.log('Helper added successfully (no files):', res);
               const dialogRef = this.dialog.open(DialogComponent, {
                 data: {
                   ...this.currenthelper,
@@ -202,23 +275,11 @@ export class HelperformComponent implements OnInit {
               dialogRef.afterClosed().subscribe(() => {
                 this.router.navigate(['/helpers']);
               });
-            });
-          });
-        } else {
-          // No files to upload, proceed directly
-          this.service.addHelper(payload).subscribe(res => {
-            const dialogRef = this.dialog.open(DialogComponent, {
-              data: {
-                ...this.currenthelper,
-                deletion: 1,
-              },
-              height: '400px',
-              width: '550px'
-            });
-
-            dialogRef.afterClosed().subscribe(() => {
-              this.router.navigate(['/helpers']);
-            });
+            },
+            error: (error) => {
+              console.error('Error adding helper (no files):', error);
+              alert('Failed to add helper. Please try again.');
+            }
           });
         }
       });

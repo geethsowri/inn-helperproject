@@ -58,4 +58,39 @@ router.post('/upload-kyc', upload.single('kyc'), (req, res) => {
   }
 });
 
+// New route for base64 KYC uploads
+router.post('/upload-kyc-base64', (req, res) => {
+  try {
+    const { fileName, base64, fileSize } = req.body;
+    
+    if (!fileName || !base64) {
+      return res.status(400).json({ error: 'Missing fileName or base64 data' });
+    }
+
+    // Convert base64 to buffer
+    const base64Data = base64.replace(/^data:image\/[a-z]+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    // Generate unique filename
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(fileName);
+    const newFileName = 'kyc-' + uniqueSuffix + fileExtension;
+    const filePath = path.join(uploadsDir, newFileName);
+    
+    // Write file to disk
+    fs.writeFileSync(filePath, buffer);
+    
+    res.status(200).json({
+      message: 'KYC document uploaded successfully',
+      fileName: newFileName,
+      filePath: `/uploads/${newFileName}`,
+      originalName: fileName,
+      size: fileSize || buffer.length
+    });
+  } catch (error) {
+    console.error('Error uploading KYC document from base64:', error);
+    res.status(500).json({ error: 'Failed to upload KYC document' });
+  }
+});
+
 module.exports = router;
